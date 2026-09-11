@@ -1,0 +1,71 @@
+<!-- commandes-table.component.html -->
+<div class="row mt-4">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header">
+        <h2 class="h5 mb-0">Menu(s) actuel(s)</h2>
+      </div>
+      <div class="card-body">
+        <!-- Votre contenu spécifique aux commandes -->
+        <div class="table-responsive">
+          <table class="table table-sm table-hover">
+            <thead class="table-light">
+              <tr>
+                <th>ID Menu</th>
+                <th>Description</th>
+                <th>Date de livraison</th>
+                <th>Date de création</th>
+                <th>Validation</th>
+                <th>Commandes PDF</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let menu of menus">
+                <td>{{ menu.id }}</td>
+                <td>{{ menu.title }}</td>
+                <td>{{ menu.date | dateFormat }}</td>
+                <td>{{ menu.createdAt }}</td>
+                <td>
+                  <span class="badge" [class]="getStatusClass(menu)">
+                    {{ menu.active ? 'En cours' : 'Validé' }}
+                  </span>
+                </td>
+                <td>
+                  <button
+                    (click)="openPdfEmitter({type:'openPdf', data:menu})"
+                    [disabled]="loadingPdfMenuId==menu.id" 
+                    class="btn btn-outline-primary py-1 px-2">
+                    <i class="fas fa-download me-1"></i> Exporter
+                  </button>
+                </td>
+                <td>
+                  <div class="btn-group btn-group-sm">
+                    <button [disabled]="!menu.active" class="btn btn-outline-success" (click)="onAction({type:'edit', data:menu})">
+                      <i [ngClass]="!menu.active ? 'fas fa-check' : 'fas fa-circle'"></i>
+                    </button>
+                    <button [disabled]="loadingModalMenuId==menu.id" class="btn btn-outline-primary" (click)="onAction({type:'view', data:menu})">
+                      <i class="fas fa-eye"></i>
+                    </button>
+                    <button class="btn btn-outline-danger" (click)="onAction({type:'delete', data:menu})">
+                      <i class="fas fa-trash"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Pagination réutilisable -->
+        <app-pagination
+          [config]="paginationConfig"
+          [showTotal]="true"
+          [showPageSizeOptions]="true"
+          alignment="between"
+          (pageChange)="onPageChange($event)">
+        </app-pagination>
+      </div>
+    </div>
+  </div>
+</div>

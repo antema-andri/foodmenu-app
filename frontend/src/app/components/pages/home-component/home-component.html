@@ -1,0 +1,196 @@
+@if (menu.id) {
+  <div class="max-w-5xl mx-auto p-6">
+
+    <!-- Recherche client -->
+    <div class="mb-6">
+      <label class="block text-gray-700 mb-2 font-medium">Rechercher un client</label>
+
+      <div class="flex items-center gap-4">
+
+        <div class="relative w-80">
+          <input 
+            [(ngModel)]="searchTerm"
+            (keyup.enter)="searchClient()"
+            class="w-full border border-gray-300 rounded-md pl-4 pr-12 py-2 focus:ring-2 focus:ring-blue-300"
+            placeholder="Nom du client..."
+          />
+
+          <button
+            (click)="searchClient()"
+            class="absolute right-0 top-0 h-full bg-blue-600 text-white px-4 rounded-r-md hover:bg-blue-700 transition flex items-center justify-center"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </button>
+        </div>
+
+        <div class="flex flex-col sm:flex-row sm:items-center gap-2">
+          <h2 class="text-xl font-bold text-gray-800">{{menu.title}}</h2>
+          <div class="flex items-center gap-3 text-sm">
+            <span class="bg-green-100 text-green-800 px-2 py-1 rounded font-medium">
+              {{numberOrder.totalCustomersOrdered}}/{{numberOrder.totalEligibleCustomers}} commandes
+            </span>
+            <span class="text-gray-600 font-medium">
+              ({{(numberOrder.totalCustomersOrdered / numberOrder.totalEligibleCustomers * 100).toFixed(1)}}%)
+            </span>
+          </div>
+        </div>
+      </div>
+
+      @if (loading) {
+        <div class="text-center py-4">
+          <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+          <p class="text-gray-600 mt-2">Chargement des commandes...</p>
+        </div>
+      }
+    </div>
+
+    <div class="mb-3"></div>
+
+    <!-- Tableau -->
+    @if (clients.length > 0) {
+      <div class="overflow-x-auto rounded-xl shadow-lg border border-gray-200">
+        <table class="min-w-full border-collapse">
+
+          <thead>
+            <tr class="bg-white border-b border-gray-200 shadow-sm">
+              <th class="px-6 py-4 text-left font-semibold text-gray-700">Client</th>
+
+              @for (meal of meals; track meal.id) {
+                <th class="px-6 py-4 text-center font-semibold text-gray-700 relative">
+                  <div class="inline-block group">
+                    <span class="cursor-help border-b border-dashed border-gray-400 transition-colors duration-200 group-hover:border-gray-600">
+                      {{ meal.name }}
+                    </span>
+
+                    <div class="absolute top-full left-1/2 transform -translate-x-1/2 mt-2 px-3 py-2 text-sm text-white bg-gray-900 rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-300 pointer-events-none z-50 whitespace-nowrap shadow-lg">
+                      {{ meal.description }}
+
+                      <div class="absolute bottom-full left-1/2 transform -translate-x-1/2 border-4 border-transparent border-b-gray-900"></div>
+                    </div>
+                  </div>
+                </th>
+              }
+
+              <th class="px-6 py-4 text-center font-semibold text-gray-700">Actions</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            @for (client of clients; track client.id) {
+              <tr class="bg-white border-b border-gray-100 hover:bg-gray-50 transition">
+
+                <td class="px-6 py-4 font-medium text-gray-800">
+                  {{ client.name }}
+                </td>
+
+                @for (dish of meals; track dish.id) {
+                  <td class="px-6 py-4 text-center">
+
+                    @if (!client.saved) {
+                      <input 
+                        type="radio"
+                        [checked]="client.selectedDishId === dish.id"
+                        (change)="selectDish(client, dish.id)"
+                        [value]="dish.id"
+                        name="dish-{{client.id}}"
+                        class="w-4 h-4 accent-blue-600"
+                      />
+                    } @else {
+                      @if (client.selectedDishId === dish.id) {
+                        <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-semibold shadow-sm">
+                          <i class="fas fa-check"></i>
+                        </span>
+                      } @else {
+                        <span class="text-gray-400 font-semibold text-lg">
+                          —
+                        </span>
+                      }
+                    }
+
+                  </td>
+                }
+
+                <td class="px-6 py-4 text-center">
+
+                  @if (!client.saved) {
+                    <button 
+                      (click)="saveOrder(client)"
+                      [disabled]="!client.selectedDishId || isSaving[client.id]"
+                      class="px-4 py-1.5 rounded-md text-sm font-medium shadow-sm transition
+                            text-white bg-green-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
+                    >
+                      Enregistrer
+                    </button>
+                  } @else {
+                    <button 
+                      (click)="editOrder(client)"
+                      class="px-4 py-1.5 rounded-md text-sm font-medium shadow-sm transition
+                            text-white bg-yellow-500 hover:bg-yellow-600"
+                    >
+                      Modifier
+                    </button>
+                  }
+
+                </td>
+
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    } @else {
+      @if (searchTerm && !loading) {
+        <div class="text-center py-8 text-gray-500">
+          Aucun client trouvé pour "{{ searchTerm }}"
+        </div>
+      } @else if (!searchTerm && !loading) {
+        <div class="text-center py-8 text-gray-500">
+          Utilisez la barre de recherche pour trouver des clients
+        </div>
+      }
+    }
+
+    <!-- Pagination -->
+    @if (clients.length > 0 && totalPage >= 1) {
+      <div class="flex justify-center mt-6">
+        <nav class="inline-flex items-center space-x-1">
+
+          <button
+            (click)="previousPage()"
+            [disabled]="currentPage === 0"
+            class="px-3 py-1 rounded border bg-white hover:bg-gray-100 text-gray-700 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <i class="fa-solid fa-chevron-left text-xs"></i>
+          </button>
+
+          @for (page of getPageNumbers(); track page) {
+            <button
+              (click)="goToPage(page)"
+              [class]="getPageButtonClass(page)"
+            >
+              {{ page + 1 }}
+            </button>
+          }
+
+          <button
+            (click)="nextPage()"
+            [disabled]="currentPage >= totalPage - 1"
+            class="px-3 py-1 rounded border bg-white hover:bg-gray-100 text-gray-700 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <i class="fa-solid fa-chevron-right text-xs"></i>
+          </button>
+
+        </nav>
+      </div>
+    }
+
+  </div>
+} @else {
+  <div class="mt-48 d-flex justify-content-center">
+    <div class="border rounded p-4 text-center w-100">
+      <p class="mb-0 fw-semibold">Aucun menu disponible</p>
+    </div>
+  </div>
+}

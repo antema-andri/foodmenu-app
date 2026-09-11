@@ -1,0 +1,49 @@
+:host {
+  display: block;
+}
+
+.modal-backdrop {
+  z-index: 1040;
+}
+
+.modal {
+  z-index: 1050;
+}
+
+.cursor-pointer {
+  cursor: pointer;
+  
+  &:hover {
+    background-color: #f8f9fa !important;
+  }
+}
+
+.modal.fade.show .modal-dialog {
+  transform: scale(1);
+  transition: transform 0.3s ease-out;
+}
+
+.modal.fade .modal-dialog {
+  transform: scale(0.8);
+}
+
+@media (max-width: 768px) {
+  .modal-dialog {
+    margin: 0.5rem;
+  }
+  
+  .btn-group {
+    display: flex;
+    flex-direction: column;
+    
+    .btn {
+      margin-bottom: 0.25rem;
+    }
+  }
+}
+
+.badge-cell {
+  .badge {
+    font-size: 0.75em;
+  }
+}

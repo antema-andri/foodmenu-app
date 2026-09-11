@@ -1,0 +1,27 @@
+.input-icon i,
+.btn-eye i {
+    line-height: 1 !important;
+    vertical-align: middle !important;
+    transform: translateY(1px);
+}
+
+.input-icon {
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 36px;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    pointer-events: none;
+}
+
+.btn-eye {
+    position: absolute;
+    inset: 0 8px 0 auto;
+    width: 36px;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    border: none;
+    background: transparent;
+}

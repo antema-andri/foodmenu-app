@@ -1,0 +1,50 @@
+<div class="container-fluid mt-4">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+      <div class="card shadow-sm">
+        <div class="card-body p-4">
+          <h4 class="mb-3 text-center">Créer un nouveau client</h4>
+
+          <form [formGroup]="customerForm" (ngSubmit)="submitCustomer()">
+
+            <!-- Fullname -->
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Nom complet</label>
+              <input type="text" 
+                     class="form-control form-control-sm"
+                     placeholder="Ex: Jean Randria"
+                     formControlName="fullname">
+            </div>
+
+            <!-- Phone -->
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Téléphone</label>
+              <input type="text" 
+                     class="form-control form-control-sm"
+                     placeholder="Ex: 0341234567"
+                     formControlName="phone">
+            </div>
+
+            <div class="text-center mt-3">
+              <button class="btn btn-primary btn-sm"
+                      [disabled]="customerForm.invalid || isCreatingCustomer">
+                Enregistrer le client
+              </button>
+            </div>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Table des clients -->
+  <app-customer-table-component
+    [customers]="customers"
+    [paginationConfig]="paginationConfig"
+    (pageChange)="onPageChange($event)"
+    (search)="onSearch($event)"
+  >
+  </app-customer-table-component>
+
+</div>

@@ -1,0 +1,22 @@
+:host {
+  display: block;
+}
+
+.page-link {
+  cursor: pointer;
+  user-select: none;
+  
+  &:focus {
+    box-shadow: none;
+  }
+}
+
+.page-item {
+  &.active .page-link {
+    z-index: 3;
+  }
+  
+  &.disabled .page-link {
+    cursor: not-allowed;
+  }
+}

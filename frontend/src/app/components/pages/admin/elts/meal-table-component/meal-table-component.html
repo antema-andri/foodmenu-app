@@ -1,0 +1,40 @@
+<div class="table-responsive">
+  <table class="table table-sm table-hover">
+    <thead class="table-light">
+      <tr>
+        <th>ID</th>
+        <th>Nom</th>
+        <th>Description</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let meal of meals">
+        <td>{{ meal.id }}</td>
+        <td>{{ meal.name }}</td>
+        <td>{{ meal.description }}</td>
+        <td>
+          <div class="btn-group btn-group-sm">
+            <button class="btn btn-outline-primary" (click)="onAction('view', meal)">
+              <i class="fas fa-eye"></i>
+            </button>
+            <button class="btn btn-outline-success" (click)="onAction('edit', meal)">
+              <i class="fas fa-edit"></i>
+            </button>
+            <button class="btn btn-outline-danger" (click)="onAction('delete', meal)">
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<app-pagination
+  [config]="paginationConfig"
+  [showTotal]="true"
+  [showPageSizeOptions]="true"
+  alignment="between"
+  (pageChange)="onPageChange($event)">
+</app-pagination>

@@ -1,0 +1,21 @@
+services:
+  backend:
+    build: ./backend
+    # container_name: menu-backend
+    ports:
+      - "${BACKEND_PORT}:8080"
+    env_file:
+      - .env
+    volumes:
+      - ${RSA_PRIVATE_KEY}:/secrets/private.pem:ro
+      - ${RSA_PUBLIC_KEY}:/secrets/public.pem:ro
+    environment:
+      ACTIVE_PROFILE: ${BACKEND_ACTIVE_PROFILE}
+      JWT_PRIVATE_KEY: file:/secrets/private.pem
+      JWT_PUBLIC_KEY: file:/secrets/public.pem
+      
+  frontend:
+    build: ./frontend
+    # container_name: menu-frontend
+    ports:
+      - "${FRONTEND_PORT}:80"

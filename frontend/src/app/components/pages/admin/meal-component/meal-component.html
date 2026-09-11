@@ -1,0 +1,74 @@
+<div class="container-fluid mt-4">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+      <div class="card shadow-sm">
+        <div class="card-body p-4">
+          <h4 class="mb-3 text-center">Ajouter un plat</h4>
+
+          <form [formGroup]="mealForm" (ngSubmit)="submitMeal()">
+
+            <!-- Nom -->
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Nom</label>
+              <input
+                type="text"
+                class="form-control form-control-sm"
+                placeholder="Ex: Poulet rôti"
+                formControlName="name"
+              >
+            </div>
+
+            <!-- Description -->
+            <div class="mb-3">
+              <label class="form-label fw-semibold">Description</label>
+              <textarea
+                class="form-control form-control-sm"
+                rows="3"
+                placeholder="Description du plat..."
+                formControlName="description">
+              </textarea>
+            </div>
+
+            <div class="text-center mt-3">
+              <button
+                class="btn btn-primary btn-sm"
+                [disabled]="mealForm.invalid || isCreatingMeal"
+              >
+                Ajouter le plat
+              </button>
+            </div>
+
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Barre de recherche -->
+  <div class="card shadow-sm mt-4">
+    <div class="card-body">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="h5 mb-0">Liste des plats</h2>
+        <div class="input-group input-group-sm" style="width: 250px">
+          <input
+            type="text"
+            class="form-control"
+            placeholder="Recherche…"
+            (input)="onSearch($any($event.target).value)"
+          />
+          <span class="input-group-text">
+            <i class="fas fa-search"></i>
+          </span>
+        </div>
+      </div>
+
+      <app-meal-table-component
+        [meals]="meals"
+        [paginationConfig]="paginationConfig"
+        (pageChange)="onPageChange($event)">
+      </app-meal-table-component>
+    </div>
+  </div>
+
+</div>

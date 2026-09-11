@@ -1,0 +1,145 @@
+<div class="container-fluid mt-4">
+
+  <!-- Formulaire centré -->
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+      <div class="card shadow-sm p-4">
+        <h4 class="mb-3 text-center">Créer un nouveau menu</h4>
+
+        <form [formGroup]="menuForm" (ngSubmit)="submitMenu()">
+
+          <!-- Titre -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Titre du menu</label>
+            <input
+              type="text"
+              class="form-control form-control-sm"
+              placeholder="Ex: Menu Spécial Midi"
+              formControlName="title">
+          </div>
+
+          <!--  -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Date de livraison</label>
+            <input
+              type="date"
+              class="form-control form-control-sm"
+              [min]="todayDate"
+              formControlName="deliver_date">
+          </div>
+
+          <!-- Sélecteur de plats -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Choisir 3 plats</label>
+
+            <ng-select
+              [items]="meals"
+              bindLabel="name"
+              bindValue="id"
+              placeholder="Sélectionner des repas"
+              [multiple]="true"
+              [maxSelectedItems]="3"
+              [closeOnSelect]="false"
+              [searchable]="true"
+              [clearable]="true"
+              formControlName="meals"
+              (search)="onSearch($event.term)"
+              class="ng-select-custom">
+            </ng-select>
+
+            <small class="text-muted">
+              Vous pouvez sélectionner jusqu'à 3 plats.
+            </small>
+
+            @if (menuForm.get('meals')?.errors?.['maxSelectedItems']) {
+              <div class="text-danger small mt-1">
+                Maximum 3 repas autorisés
+              </div>
+            }
+          </div>
+
+          <!-- Compteur -->
+          <div class="text-muted small mb-2">
+            Plats sélectionnés: {{ menuForm.get('meals')?.value?.length || 0 }}/3
+          </div>
+
+          <!-- Bouton -->
+          <div class="text-center">
+            <button
+              type="submit"
+              class="btn btn-primary btn-sm"
+              [disabled]="menuForm.invalid || isCreatingMenu">
+              Enregistrer le menu
+            </button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Table en pleine largeur -->
+  <div class="mt-4">
+    <app-menu-table-component
+      [menus]="formatedMenu"
+      [paginationConfig]="paginationConfig"
+      [loadingPdfMenuId]="loadingPdfMenuId"
+      [loadingModalMenuId]="loadingModalMenuId"
+      (openPdfAction)="exportMenuPdf($event,0)"
+      (action)="showAction($event)"
+      (pageChange)="onPageChange($event)">
+    </app-menu-table-component>
+  </div>
+
+</div>
+
+<!-- Modal pour afficher les plats -->
+<div class="modal fade" id="dishesModal" tabindex="-1" aria-labelledby="dishesModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="dishesModalLabel">
+          Menu N°-{{ selectedMenu?.id }}: {{ selectedMenu?.title }}
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        @if (selectedMenuDishes && selectedMenuDishes.length > 0) {
+          <div class="table-responsive">
+            <table class="table table-sm table-hover">
+              <thead class="table-light">
+                <tr>
+                  <th>Nom du plat</th>
+                  <th>Description</th>
+                  <th>Commandes</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (dish of selectedMenuDishes; track dish.meal.id) {
+                  <tr>
+                    <td>{{ dish.meal.name }}</td>
+                    <td>{{ dish.meal.description }}</td>
+                    <td>{{ dish.total }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+        } @else {
+          <div class="text-center py-4">
+            <i class="fas fa-utensils fa-3x text-muted mb-3"></i>
+            <p class="text-muted">Aucun plat trouvé pour ce menu.</p>
+          </div>
+        }
+      </div>
+      <div class="modal-footer d-flex justify-content-between align-items-center">
+        <p class="mb-0 fw-semibold text-muted">
+          Total : <span class="text-dark">{{ totalCommandes }}</span>
+          /
+          <span class="text-primary">{{ totalCustomers }}</span>
+        </p>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+      </div>
+    </div>
+  </div>
+</div>

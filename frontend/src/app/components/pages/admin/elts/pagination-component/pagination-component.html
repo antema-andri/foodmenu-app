@@ -1,0 +1,86 @@
+<!-- pagination.component.html -->
+<div class="d-flex justify-content-{{alignment}} align-items-center mt-3">
+  <!-- Informations sur les résultats -->
+  <div *ngIf="showTotal" class="text-muted small me-3">
+    Affichage de {{startIndex}} à {{endIndex}} sur {{config.total}} éléments
+  </div>
+
+  <!-- Sélecteur d'éléments par page -->
+  <div *ngIf="showPageSizeOptions && config.pageSizeOptions" class="me-3">
+    <select 
+      class="form-select form-select-sm" 
+      [value]="config.pageSize"
+      (change)="onPageSizeChange(+$any($event.target).value)"
+      style="width: auto;">
+      <option *ngFor="let size of config.pageSizeOptions" [value]="size">
+        {{size}} / page
+      </option>
+    </select>
+  </div>
+
+  <!-- Navigation des pages -->
+  <nav>
+    <ul class="pagination pagination-sm mb-0">
+      <!-- Bouton Précédent -->
+      <li class="page-item" [class.disabled]="isFirstPage()">
+        <a 
+          class="page-link" 
+          href="javascript:void(0)"
+          (click)="previousPage()"
+          [class.pe-none]="isFirstPage()">
+          Précédent
+        </a>
+      </li>
+
+      <!-- Première page + ellipsis -->
+      <li *ngIf="pages[0] > 1" class="page-item">
+        <a 
+          class="page-link" 
+          href="javascript:void(0)"
+          (click)="goToPage(1)">
+          1
+        </a>
+      </li>
+      <li *ngIf="pages[0] > 2" class="page-item disabled">
+        <span class="page-link">...</span>
+      </li>
+
+      <!-- Pages numérotées -->
+      <li 
+        *ngFor="let page of pages" 
+        class="page-item" 
+        [class.active]="page === config.page">
+        <a 
+          class="page-link" 
+          href="javascript:void(0)"
+          (click)="goToPage(page)">
+          {{page}}
+        </a>
+      </li>
+
+      <!-- Dernière page + ellipsis -->
+      <li *ngIf="pages[pages.length - 1] < totalPages - 1" class="page-item disabled">
+        <span class="page-link">...</span>
+      </li>
+      <li *ngIf="pages[pages.length - 1] < totalPages" class="page-item">
+        <a 
+          class="page-link" 
+          href="javascript:void(0)"
+          (click)="goToPage(totalPages)">
+          {{totalPages}}
+        </a>
+      </li>
+
+      <!-- Bouton Suivant -->
+      <li class="page-item" [class.disabled]="isLastPage()">
+        <a 
+          class="page-link" 
+          href="javascript:void(0)"
+          (click)="nextPage()"
+          [class.pe-none]="isLastPage()">
+          Suivant
+        </a>
+      </li>
+    </ul>
+  </nav>
+</div>

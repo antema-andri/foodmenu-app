@@ -1,0 +1,168 @@
+<!-- modal-list.component.html -->
+<div 
+  class="modal-backdrop fade show"
+  *ngIf="isOpen"
+  (click)="closeModal()">
+</div>
+
+<div 
+  class="modal fade show d-block"
+  *ngIf="isOpen"
+  tabindex="-1"
+  role="dialog"
+  (click)="closeModal()">
+  
+  <div 
+    class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable"
+    role="document"
+    (click)="stopPropagation($event)">
+    
+    <div class="modal-content">
+      <!-- Header -->
+      <div class="modal-header">
+        <div>
+          <h5 class="modal-title fw-bold">{{ config.titre }}</h5>
+          <p class="text-muted mb-0 small" *ngIf="config.sousTitre">
+            {{ config.sousTitre }}
+          </p>
+        </div>
+        <button 
+          type="button" 
+          class="btn-close"
+          (click)="closeModal()"
+          aria-label="Fermer">
+        </button>
+      </div>
+
+      <!-- Body -->
+      <div class="modal-body">
+        <!-- Barre de recherche -->
+        <div class="row mb-3" *ngIf="config.showSearch">
+          <div class="col-md-6">
+            <div class="input-group">
+              <span class="input-group-text">
+                <i class="fas fa-search"></i>
+              </span>
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Rechercher..."
+                [(ngModel)]="searchTerm"
+                (input)="onSearchChange(searchTerm)">
+            </div>
+          </div>
+          <div class="col-md-6 text-end text-muted small" *ngIf="config.showPagination">
+            {{ displayedCount }}
+          </div>
+        </div>
+
+        <!-- Tableau -->
+        <div class="table-responsive">
+          <table class="table table-hover table-striped">
+            <thead class="table-light">
+              <tr>
+                <th *ngFor="let colonne of config.colonnes; trackBy: trackByColumnKey"
+                    [class]="colonne.class">
+                  {{ colonne.label }}
+                </th>
+                <th *ngIf="config.actions && config.actions.length > 0">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr 
+                *ngFor="let item of paginatedData; trackBy: trackByItemId"
+                [class.cursor-pointer]="config.itemClickable !== false"
+                (click)="onItemClick(item)">
+                
+                <!-- Colonnes dynamiques -->
+                <td *ngFor="let colonne of config.colonnes; trackBy: trackByColumnKey"
+                    [class]="colonne.class">
+                  
+                  <!-- Template personnalisé -->
+                  <ng-container 
+                    *ngIf="customTemplates[colonne.key]; else defaultCell">
+                    <ng-container
+                      *ngTemplateOutlet="customTemplates[colonne.key]; context: { $implicit: item }">
+                    </ng-container>
+                  </ng-container>
+
+                  <!-- Cellule par défaut -->
+                  <ng-template #defaultCell>
+                    <span [class]="getBadgeClass(item, colonne)" *ngIf="colonne.type === 'badge'; else textCell">
+                      {{ formatValue(getCellValue(item, colonne), colonne) }}
+                    </span>
+                    <ng-template #textCell>
+                      {{ formatValue(getCellValue(item, colonne), colonne) }}
+                    </ng-template>
+                  </ng-template>
+                </td>
+
+                <!-- Actions -->
+                <td *ngIf="config.actions && config.actions.length > 0">
+                  <div class="btn-group btn-group-sm">
+                    <button
+                      *ngFor="let action of config.actions"
+                      class="btn"
+                      [class]="action.class"
+                      (click)="onActionClick(action.action, item, $event)"
+                      [title]="action.label">
+                      <i [class]="action.icon"></i>
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+
+          <!-- Empty state -->
+          <div *ngIf="filteredData.length === 0" class="text-center py-5">
+            <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+            <p class="text-muted">{{ config.emptyMessage || 'Aucun élément trouvé' }}</p>
+            <button *ngIf="searchTerm" class="btn btn-outline-primary btn-sm" (click)="onSearchChange('')">
+              Effacer la recherche
+            </button>
+          </div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="d-flex justify-content-between align-items-center mt-3" 
+             *ngIf="config.showPagination && totalPages > 1">
+          <div class="text-muted small">
+            Page {{ currentPage }} sur {{ totalPages }}
+          </div>
+          <nav>
+            <ul class="pagination pagination-sm mb-0">
+              <li class="page-item" [class.disabled]="currentPage === 1">
+                <a class="page-link" href="javascript:void(0)" (click)="changePage(currentPage - 1)">
+                  Précédent
+                </a>
+              </li>
+              <li *ngFor="let page of [].constructor(totalPages); let i = index"
+                  class="page-item" 
+                  [class.active]="currentPage === i + 1">
+                <a class="page-link" href="javascript:void(0)" (click)="changePage(i + 1)">
+                  {{ i + 1 }}
+                </a>
+              </li>
+              <li class="page-item" [class.disabled]="currentPage === totalPages">
+                <a class="page-link" href="javascript:void(0)" (click)="changePage(currentPage + 1)">
+                  Suivant
+                </a>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="modal-footer">
+        <button 
+          type="button" 
+          class="btn btn-secondary"
+          (click)="closeModal()">
+          Fermer
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
