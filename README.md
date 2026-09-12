@@ -87,6 +87,7 @@ Use the following credentials to access the administration interface:
 ```text
 Username: admin001
 Password: dNstQ21M5ot
+```
 
 ## Configuration
 
