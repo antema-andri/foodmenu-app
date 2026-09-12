@@ -78,6 +78,16 @@ From the project root:
 docker compose -f docker-compose.yaml up -d --build
 ```
 
+## Default User
+
+A default administrator user is provided in the database initialization for demonstration purposes.
+
+Use the following credentials to access the administration interface:
+
+```text
+Username: admin001
+Password: dNstQ21M5ot
+
 ## Configuration
 
 The backend uses environment variables for database, JWT, Spring profile, and CORS configuration.
