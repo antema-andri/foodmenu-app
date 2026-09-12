@@ -70,8 +70,6 @@ RSA_PUBLIC_KEY=your_public_key
 CORS_ALLOWED_ORIGIN=https://your-domain.com
 ```
 
-Do not commit `.env` or any private key to the repository.
-
 ### 2. Start the application
 
 From the project root:
@@ -79,26 +77,6 @@ From the project root:
 ```bash
 docker compose -f docker-compose.yaml up -d --build
 ```
-
-### 3. Check the containers
-
-```bash
-docker compose -f docker-compose.yaml ps
-```
-
-### 4. View logs
-
-```bash
-docker compose -f docker-compose.yaml logs -f
-```
-
-### 5. Stop the application
-
-```bash
-docker compose -f docker-compose.yaml down
-```
-
-All application services are managed through `docker-compose.yaml`.
 
 ## Configuration
 
