@@ -8,6 +8,7 @@ It allows customers to view the available meals and place their daily orders. Ad
 
 * **Backend:** Java / Spring Boot
 * **Frontend:** Angular
+* **Web server:** Nginx
 * **Database:** PostgreSQL
 * **Deployment:** Docker Compose
 
