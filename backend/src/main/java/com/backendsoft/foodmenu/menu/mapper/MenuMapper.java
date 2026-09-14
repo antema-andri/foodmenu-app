@@ -15,7 +15,7 @@ import org.mapstruct.Named;
 public interface MenuMapper {
 
     // ==============================================
-    // MAPPINGS SANS CONTEXTE (par défaut)
+    // MAPPINGS WITHOUT CONTEXT (default)
     // ==============================================
 
     @Named("default")
@@ -30,7 +30,6 @@ public interface MenuMapper {
     @Named("default")
     MealDto fromEntity(Meal meal);
 
-    // DTO -> Entité sans contexte
     Menu fromDto(MenuDto menuDto);
 
     @Mapping(target = "menu", ignore = true)
@@ -39,7 +38,7 @@ public interface MenuMapper {
     Meal fromDto(MealDto mealDto);
 
     // ==============================================
-    // MAPPINGS AVEC CONTEXTE (gestion des cycles)
+    // MAPPINGS WITH CONTEXT (cycle handling)
     // ==============================================
 
     @Named("withContext")
@@ -54,7 +53,6 @@ public interface MenuMapper {
     @Named("withContext")
     MealDto fromEntity(Meal meal, @Context CycleAvoidingMappingContext context);
 
-    // DTO -> Entité avec contexte (si besoin)
     @Named("withContextDto")
     Menu fromDto(MenuDto menuDto, @Context CycleAvoidingMappingContext context);
 
@@ -66,7 +64,7 @@ public interface MenuMapper {
     Meal fromDto(MealDto mealDto, @Context CycleAvoidingMappingContext context);
 
     // ==============================================
-    // MÉTHODE DE CONVERSION D'UN SEUL ÉLÉMENT
+    // SINGLE ELEMENT CONVERSION METHOD
     // ==============================================
 
     @Named("menuMealToMealDto")
