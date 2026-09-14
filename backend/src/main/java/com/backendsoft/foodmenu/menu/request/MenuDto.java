@@ -16,8 +16,8 @@ public class MenuDto {
     private String id;
     private LocalDate date;
 
-    private String title; // ex: "Menu du Mardi"
-    private boolean active; // le menu actuel
+    private String title;
+    private boolean active;
     private Integer maxMeals;
 
     private LocalDateTime createdAt;
