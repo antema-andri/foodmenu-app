@@ -4,6 +4,26 @@ FoodMenu is a web application for managing daily meal orders in a company.
 
 It allows customers to view the available meals and place their daily orders. Administrators can manage customers, meals, menus, and orders through a dedicated administration interface.
 
+## Screenshots
+
+### Daily Menu
+
+The daily menu allows customers to view the available meals and place their orders.
+
+![Daily Menu](screenshots/home_menu.png)
+
+### Administration
+
+Administrators can access the administration interface to manage the application.
+
+![Administration](screenshots/admin_login.png)
+
+### Orders PDF
+
+Orders can be exported as a PDF for easy consultation and processing.
+
+![Orders PDF](screenshots/pdf_orders.png)
+
 ## Technologies
 
 * **Backend:** Java / Spring Boot
