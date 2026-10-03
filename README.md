@@ -18,6 +18,24 @@ Administrators can access the administration interface to manage the application
 
 ![Administration](screenshots/admin_login.png)
 
+#### Menu Management
+
+Administrators can create and manage the daily menus.
+
+![Menu Management](screenshots/admin_menu_management.png)
+
+#### Meal Management
+
+Administrators can create and manage the meals available in the application.
+
+![Meal Management](screenshots/admin_meal_management.png)
+
+#### Customer Management
+
+Administrators can manage the customers who use the application.
+
+![Customer Management](screenshots/admin_customer_management.png)
+
 ### Orders PDF
 
 Orders can be exported as a PDF for easy consultation and processing.
